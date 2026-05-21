@@ -18,6 +18,7 @@ namespace BirthdayReminder.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
                     Birthday = table.Column<DateOnly>(type: "date", nullable: false),
                     TimeZone = table.Column<string>(type: "text", nullable: false),
                     BirthdayNotificationUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -33,6 +34,12 @@ namespace BirthdayReminder.Migrations
                 name: "IX_Users_BirthdayNotificationUtc",
                 table: "Users",
                 column: "BirthdayNotificationUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

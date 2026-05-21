@@ -10,7 +10,7 @@ public class UserService(IUserRepository userRepository, TimeZoneService timeZon
     public async Task<User> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
     {
         var birthdayNotificationUtc = timeZoneService.CalculateBirthdayNotificationUtc(request.Birthday, request.TimeZone);
-        var user = new User(request.FirstName, request.LastName, request.Birthday, request.TimeZone, birthdayNotificationUtc);
+        var user = new User(request.FirstName, request.LastName, request.Email, request.Birthday, request.TimeZone, birthdayNotificationUtc);
         await userRepository.CreateUserAsync(user, cancellationToken);
         await userRepository.SaveChangesAsync(cancellationToken);
         return user;
@@ -19,7 +19,7 @@ public class UserService(IUserRepository userRepository, TimeZoneService timeZon
     public async Task UpdateUserAsync(Guid id, UpdateUserRequest request, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetUserByIdAsync(id, cancellationToken) ?? throw new UserNotFoundException(id);
-        user.Update(request.FirstName, request.LastName, request.Birthday, request.TimeZone, timeZoneService.CalculateBirthdayNotificationUtc(request.Birthday, request.TimeZone));
+        user.Update(request.FirstName, request.LastName, request.Email, request.Birthday, request.TimeZone, timeZoneService.CalculateBirthdayNotificationUtc(request.Birthday, request.TimeZone));
         await userRepository.SaveChangesAsync(cancellationToken);
     }
 
