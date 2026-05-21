@@ -1,4 +1,8 @@
-using BirthdayReminder.Infrastructure.Persistence;
+using BirthdayReminder.Application.Interfaces;
+using BirthdayReminder.Application.Services;
+using BirthdayReminder.Infrastructure.Persistences;
+using BirthdayReminder.Infrastructure.Repositories;
+using BirthdayReminder.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +15,16 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(option => option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddSingleton<TimeZoneService>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
