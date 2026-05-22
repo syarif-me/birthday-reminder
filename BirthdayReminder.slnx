@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BirthdayReminder.csproj" />
+  <Project Path="BirthdayReminder.Tests/BirthdayReminder.Tests.csproj" />
+</Solution>

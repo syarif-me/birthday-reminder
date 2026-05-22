@@ -2,6 +2,7 @@ using BirthdayReminder.Application.Interfaces;
 using BirthdayReminder.Application.Services;
 using BirthdayReminder.Domain.Entities;
 using BirthdayReminder.Domain.Enums;
+using BirthdayReminder.Domain.Extensions;
 
 namespace BirthdayReminder.Infrastructure.Services;
 
@@ -14,17 +15,7 @@ public class BirthdayReminderStrategy(
 
     public async Task ProcessReminderAsync(User user, CancellationToken cancellationToken)
     {
-        var today = DateTime.UtcNow;
-        var year = today.Year;
-        var month = user.Birthday.Month;
-        var day = user.Birthday.Day;
-
-        if (month == 2 && day == 29 && !DateTime.IsLeapYear(year))
-        {
-            day = 28;
-        }
-
-        var scheduledDate = new DateOnly(year, month, day);
+        var scheduledDate = user.Birthday.GetNotificationDate(DateTime.UtcNow.Year);
 
         var reminder = await reminderRepository.GetReminderAsync(user.Id, ReminderType.Birthday, scheduledDate, cancellationToken);
         if (reminder?.Status == ReminderStatus.Sent) return;
